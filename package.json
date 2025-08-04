@@ -1,0 +1,124 @@
+{
+  "name": "language-dictation-ai",
+  "version": "1.0.0",
+  "description": "Learn vocabulary through AI-generated sentences with speech recognition",
+  "main": "electron/main.js",
+  "homepage": "./",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "build": "npm run build:web && npm run build:electron && npm run build:capacitor",
+    "build:web": "echo 'Web build complete - files ready for deployment'",
+    "build:electron": "npm run build:electron:win && npm run build:electron:mac && npm run build:electron:linux",
+    "build:electron:win": "electron-builder --win",
+    "build:electron:mac": "electron-builder --mac",
+    "build:electron:linux": "electron-builder --linux",
+    "build:capacitor": "npm run cap:build && npm run cap:copy",
+    "electron": "electron .",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:8000 && electron .\"",
+    "pack:electron": "electron-builder --dir",
+    "dist:electron": "electron-builder",
+    "cap:add:ios": "npx cap add ios",
+    "cap:add:android": "npx cap add android",
+    "cap:build": "echo 'Preparing web assets for Capacitor'",
+    "cap:copy": "npx cap copy",
+    "cap:sync": "npx cap sync",
+    "cap:open:ios": "npx cap open ios",
+    "cap:open:android": "npx cap open android",
+    "cap:run:ios": "npx cap run ios",
+    "cap:run:android": "npx cap run android",
+    "install:electron": "npm install electron electron-builder concurrently wait-on --save-dev",
+    "install:capacitor": "npm install @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android --save-dev",
+    "setup": "npm run install:electron && npm run install:capacitor"
+  },
+  "keywords": [
+    "dictation",
+    "vocabulary",
+    "ai",
+    "education",
+    "speech",
+    "learning"
+  ],
+  "author": "Language Dictation AI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/android": "^5.7.8",
+    "@capacitor/cli": "^5.7.8",
+    "@capacitor/core": "^5.7.8",
+    "@capacitor/ios": "^5.7.8",
+    "concurrently": "^8.2.2",
+    "electron": "^27.3.11",
+    "electron-builder": "^24.13.3",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.languagedictation.ai",
+    "productName": "Language Dictation AI",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "index.html",
+      "styles/**/*",
+      "js/**/*",
+      "icons/**/*",
+      "manifest.json"
+    ],
+    "extraResources": [
+      {
+        "from": "icons/",
+        "to": "icons/",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "icons/icon-256x256.png"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "icons/icon-512x512.png",
+      "category": "public.app-category.education"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "icons/icon-512x512.png",
+      "category": "Education"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

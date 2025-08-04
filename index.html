@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Learn vocabulary through AI-generated sentences with speech recognition">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="DictationAI">
+    <title>Language Dictation AI</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png">
+    
+    <!-- Google APIs Client Library -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-microphone-alt"></i> Language Dictation AI</h1>
+            <p>Learn vocabulary through AI-generated sentences</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="setup">Setup</button>
+            <button class="tab-btn" data-tab="practice">Practice</button>
+            <button class="tab-btn" data-tab="progress">Progress</button>
+        </nav>
+
+        <!-- Setup Tab -->
+        <div class="tab-content active" id="setup">
+            <div class="card">
+                <h2><i class="fas fa-upload"></i> Import Vocabulary</h2>
+                <div class="import-section">
+                    <div class="file-upload">
+                        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" hidden>
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-file-excel"></i> Choose Excel/CSV File
+                        </button>
+                        <p class="file-format">Format: Word | POS | Meaning | Sentence Example</p>
+                    </div>
+                    <div class="google-sheets">
+                        <div class="google-auth-section">
+                            <div id="googleSignInStatus" class="auth-status">
+                                <span id="authStatusText">Not signed in to Google</span>
+                                <button class="btn btn-google" id="googleSignInBtn">
+                                    <i class="fab fa-google"></i> Sign in with Google
+                                </button>
+                                <button class="btn btn-secondary" id="googleSignOutBtn" style="display: none;">
+                                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="importGoogleSheetBtn" disabled>
+                            <i class="fab fa-google-drive"></i> Import from Google Sheets
+                        </button>
+                        <div class="google-sheet-input" id="googleSheetInput" style="display: none;">
+                            <input type="text" id="googleSheetUrl" placeholder="Paste Google Sheets URL here...">
+                            <button class="btn btn-secondary" id="confirmGoogleSheetBtn">
+                                <i class="fas fa-download"></i> Import
+                            </button>
+                            <button class="btn btn-secondary" id="cancelGoogleSheetBtn">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                        <p class="file-format">Access your private Google Sheets securely</p>
+                    </div>
+                    <div class="sample-data">
+                        <button class="btn btn-secondary" id="loadSampleBtn">
+                            <i class="fas fa-download"></i> Load Sample Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="word-preview" id="wordPreview" style="display: none;">
+                    <h3>Imported Words</h3>
+                    <div class="word-count">
+                        <span id="wordCount">0</span> words loaded
+                    </div>
+                    <div class="word-list" id="wordList"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-cog"></i> Session Settings</h2>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label for="difficultyLevel">Difficulty Level:</label>
+                        <select id="difficultyLevel">
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="sessionSize">Session Size:</label>
+                        <select id="sessionSize">
+                            <option value="5">5 words</option>
+                            <option value="10" selected>10 words</option>
+                            <option value="15">15 words</option>
+                            <option value="20">20 words</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="voiceSpeed">Speech Speed:</label>
+                        <select id="voiceSpeed">
+                            <option value="0.8">Slow</option>
+                            <option value="1.0" selected>Normal</option>
+                            <option value="1.2">Fast</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="api-settings">
+                    <h3><i class="fas fa-key"></i> API Configuration</h3>
+                    <div class="setting-item">
+                        <label for="qwenApiKey">Qwen-Plus API Key:</label>
+                        <input type="password" id="qwenApiKey" placeholder="Enter your Qwen-Plus API key">
+                        <small>Your API key is stored locally and never sent to our servers. <a href="#" id="qwenSetupGuide">Get API Key</a></small>
+                    </div>
+                    <div class="setting-item">
+                        <label for="googleClientId">Google OAuth Client ID:</label>
+                        <input type="text" id="googleClientId" placeholder="Enter your Google OAuth Client ID">
+                        <small>Required for accessing private Google Sheets. <a href="#" id="googleSetupGuide">Setup Guide</a></small>
+                    </div>
+                </div>
+
+                <button class="btn btn-success btn-large" id="startSessionBtn" disabled>
+                    <i class="fas fa-play"></i> Start Dictation Session
+                </button>
+            </div>
+        </div>
+
+        <!-- Practice Tab -->
+        <div class="tab-content" id="practice">
+            <div class="practice-container">
+                <div class="practice-header">
+                    <div class="session-info">
+                        <span class="current-word">Word <span id="currentWordNum">1</span> of <span id="totalWords">10</span></span>
+                        <div class="difficulty-badge" id="difficultyBadge">Beginner</div>
+                    </div>
+                    <div class="session-actions">
+                        <button class="btn btn-secondary" id="pauseBtn">
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button class="btn btn-danger" id="endSessionBtn">
+                            <i class="fas fa-stop"></i> End Session
+                        </button>
+                    </div>
+                </div>
+
+                <div class="practice-card">
+                    <div class="word-display">
+                        <h2 id="currentWord">Loading...</h2>
+                        <p class="word-details">
+                            <span class="pos" id="currentPOS"></span>
+                            <span class="meaning" id="currentMeaning"></span>
+                        </p>
+                    </div>
+
+                    <div class="sentence-section">
+                        <div class="generated-sentence" id="generatedSentence">
+                            Generating sentence...
+                        </div>
+                        
+                        <div class="audio-controls">
+                            <button class="btn btn-primary btn-large" id="playAudioBtn">
+                                <i class="fas fa-volume-up"></i> Play Sentence
+                            </button>
+                            <button class="btn btn-secondary" id="replayBtn" style="display: none;">
+                                <i class="fas fa-redo"></i> Replay
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="input-section">
+                        <h3>Type what you heard:</h3>
+                        <textarea id="userInput" placeholder="Type the sentence here..." rows="3"></textarea>
+                        
+                        <div class="input-methods">
+                            <div class="typing-mode active">
+                                <button class="btn btn-secondary" id="submitAnswerBtn">
+                                    <i class="fas fa-check"></i> Submit Answer
+                                </button>
+                            </div>
+                            
+                            <div class="upload-mode">
+                                <input type="file" id="handwritingUpload" accept="image/*" hidden>
+                                <button class="btn btn-secondary" onclick="document.getElementById('handwritingUpload').click()">
+                                    <i class="fas fa-camera"></i> Upload Handwriting
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feedback-section" id="feedbackSection" style="display: none;">
+                        <div class="feedback-content">
+                            <div class="accuracy-score">
+                                <span class="score" id="accuracyScore">0%</span>
+                                <span class="label">Accuracy</span>
+                            </div>
+                            <div class="comparison">
+                                <div class="expected">
+                                    <h4>Expected:</h4>
+                                    <p id="expectedSentence"></p>
+                                </div>
+                                <div class="actual">
+                                    <h4>Your Answer:</h4>
+                                    <p id="actualSentence"></p>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" id="nextWordBtn">
+                                <i class="fas fa-arrow-right"></i> Next Word
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tab -->
+        <div class="tab-content" id="progress">
+            <div class="progress-container">
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalWordsLearned">0</div>
+                        <div class="stat-label">Words Learned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="averageAccuracy">0%</div>
+                        <div class="stat-label">Average Accuracy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSessions">0</div>
+                        <div class="stat-label">Sessions Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="studyTime">0h</div>
+                        <div class="stat-label">Study Time</div>
+                    </div>
+                </div>
+
+                <div class="progress-charts">
+                    <div class="chart-container">
+                        <h3>Recent Performance</h3>
+                        <canvas id="performanceChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="word-progress">
+                        <h3>Word Progress</h3>
+                        <div class="progress-list" id="wordProgressList">
+                            <!-- Progress items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loadingText">Processing...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/googleAuthService.js"></script>
+    <script src="js/dataManager.js"></script>
+    <script src="js/aiService.js"></script>
+    <script src="js/speechService.js"></script>
+    <script src="js/ocrService.js"></script>
+    <script src="js/progressTracker.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

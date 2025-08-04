@@ -1,0 +1,34 @@
+{
+  "appId": "com.languagedictation.ai",
+  "appName": "Language Dictation AI",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#667eea",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": true,
+      "spinnerColor": "#ffffff"
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#667eea"
+    },
+    "Keyboard": {
+      "resize": "ionic"
+    },
+    "App": {
+      "statusBarStyle": "LIGHT"
+    }
+  },
+  "ios": {
+    "scheme": "Language Dictation AI"
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
