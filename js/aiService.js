@@ -98,6 +98,13 @@ class AIService {
     // Build prompt for sentence generation
     buildPrompt(word, pos, meaning, difficulty, existingExample) {
         const difficultyInstructions = {
+            a1: 'Use very simple vocabulary and short sentences (6-10 words). Focus on basic present tense and elementary grammar.',
+            a2: 'Use simple vocabulary and short sentences (8-12 words). Include basic past/future tenses and elementary structures.',
+            b1: 'Use moderate vocabulary and medium-length sentences (10-16 words). Include intermediate grammar and complex tenses.',
+            b2: 'Use advanced vocabulary and longer sentences (14-20 words). Include complex grammar structures like conditionals.',
+            c1: 'Use sophisticated vocabulary and longer sentences (16-25 words). Include advanced grammar structures and nuanced meanings.',
+            c2: 'Use proficient-level vocabulary and complex sentences (20+ words). Include idiomatic expressions and advanced syntax.',
+            // Backward compatibility
             beginner: 'Use simple vocabulary and short sentences (8-12 words). Focus on basic grammar structures.',
             intermediate: 'Use moderate vocabulary and medium-length sentences (12-18 words). Include some complex grammar.',
             advanced: 'Use sophisticated vocabulary and longer sentences (18-25 words). Include complex grammar structures and nuanced meanings.'

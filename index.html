@@ -25,6 +25,31 @@
         <header class="header">
             <h1><i class="fas fa-microphone-alt"></i> Language Dictation AI</h1>
             <p>Learn vocabulary through AI-generated sentences</p>
+            
+            <!-- Student Login Section -->
+            <div class="student-login" id="studentLogin">
+                <div class="login-card">
+                    <h3><i class="fas fa-user-graduate"></i> Student Login</h3>
+                    <div class="login-form">
+                        <input type="text" id="studentName" placeholder="Enter your name" required>
+                        <input type="text" id="classCode" placeholder="Enter class code" required>
+                        <button class="btn btn-google" id="studentGoogleLoginBtn">
+                            <i class="fab fa-google"></i> Sign in with Google
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Student Info (shown when logged in) -->
+            <div class="student-info" id="studentInfo" style="display: none;">
+                <div class="welcome-message">
+                    <span>Welcome, <strong id="loggedInStudentName"></strong></span>
+                    <span class="class-code-display">Class: <strong id="loggedInClassCode"></strong></span>
+                    <button class="btn btn-secondary btn-sm" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
         </header>
 
         <!-- Navigation Tabs -->
@@ -32,6 +57,9 @@
             <button class="tab-btn active" data-tab="setup">Setup</button>
             <button class="tab-btn" data-tab="practice">Practice</button>
             <button class="tab-btn" data-tab="progress">Progress</button>
+            <button class="tab-btn" data-tab="teacher" id="teacherTab" style="display: none;">
+                <i class="fas fa-chalkboard-teacher"></i> Teacher
+            </button>
         </nav>
 
         <!-- Setup Tab -->
@@ -94,9 +122,12 @@
                     <div class="setting-item">
                         <label for="difficultyLevel">Difficulty Level:</label>
                         <select id="difficultyLevel">
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advanced">Advanced</option>
+                            <option value="a1">A1 (Beginner) - 6-10 words</option>
+                            <option value="a2">A2 (Elementary) - 8-12 words</option>
+                            <option value="b1" selected>B1 (Intermediate) - 10-16 words</option>
+                            <option value="b2">B2 (Upper-Intermediate) - 14-20 words</option>
+                            <option value="c1">C1 (Advanced) - 16-25 words</option>
+                            <option value="c2">C2 (Proficient) - 20+ words</option>
                         </select>
                     </div>
                     <div class="setting-item">
@@ -322,6 +353,156 @@
                 </div>
             </div>
         </div>
+
+        <!-- Teacher Admin Panel -->
+        <div class="tab-content" id="teacher" style="display: none;">
+            <div class="teacher-container">
+                <!-- Teacher Login -->
+                <div class="teacher-login" id="teacherLogin">
+                    <div class="card">
+                        <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Login</h2>
+                        <div class="login-form">
+                            <input type="password" id="teacherPassword" placeholder="Enter teacher password">
+                            <button class="btn btn-primary" id="teacherLoginBtn">
+                                <i class="fas fa-sign-in-alt"></i> Login as Teacher
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teacher Dashboard -->
+                <div class="teacher-dashboard" id="teacherDashboard" style="display: none;">
+                    <!-- Assignment Management -->
+                    <div class="card">
+                        <h2><i class="fas fa-tasks"></i> Assignment Management</h2>
+                        <div class="assignment-creator">
+                            <h3>Create New Assignment</h3>
+                            <div class="settings-grid">
+                                <div class="setting-item">
+                                    <label for="assignmentName">Assignment Name:</label>
+                                    <input type="text" id="assignmentName" placeholder="e.g., Week 1 Vocabulary">
+                                </div>
+                                <div class="setting-item">
+                                    <label for="assignmentDifficulty">Difficulty Level:</label>
+                                    <select id="assignmentDifficulty">
+                                        <option value="a1">A1 (Beginner)</option>
+                                        <option value="a2">A2 (Elementary)</option>
+                                        <option value="b1">B1 (Intermediate)</option>
+                                        <option value="b2">B2 (Upper-Intermediate)</option>
+                                        <option value="c1">C1 (Advanced)</option>
+                                        <option value="c2">C2 (Proficient)</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item">
+                                    <label for="assignmentSize">Session Size:</label>
+                                    <select id="assignmentSize">
+                                        <option value="5">5 words</option>
+                                        <option value="10">10 words</option>
+                                        <option value="15">15 words</option>
+                                        <option value="20">20 words</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item">
+                                    <label for="assignmentClassCode">Class Code:</label>
+                                    <input type="text" id="assignmentClassCode" placeholder="e.g., ENG101">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" id="createAssignmentBtn">
+                                <i class="fas fa-plus"></i> Create Assignment Link
+                            </button>
+                        </div>
+
+                        <!-- Generated Assignment Links -->
+                        <div class="assignment-links" id="assignmentLinks">
+                            <h3>Assignment Links</h3>
+                            <div class="links-list" id="linksList">
+                                <!-- Assignment links will appear here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student Progress Overview -->
+                    <div class="card">
+                        <h2><i class="fas fa-users"></i> Student Progress Overview</h2>
+                        <div class="class-filter">
+                            <label for="classFilter">Filter by Class:</label>
+                            <select id="classFilter">
+                                <option value="all">All Classes</option>
+                            </select>
+                        </div>
+                        <div class="students-table">
+                            <table id="studentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Class Code</th>
+                                        <th>Sessions</th>
+                                        <th>Avg Accuracy</th>
+                                        <th>Last Activity</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentsTableBody">
+                                    <!-- Student data will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Class Analytics -->
+                    <div class="card">
+                        <h2><i class="fas fa-chart-line"></i> Class Analytics</h2>
+                        <div class="analytics-grid">
+                            <div class="analytics-card">
+                                <h4>Total Students</h4>
+                                <div class="analytics-value" id="totalStudents">0</div>
+                            </div>
+                            <div class="analytics-card">
+                                <h4>Active Students (This Week)</h4>
+                                <div class="analytics-value" id="activeStudents">0</div>
+                            </div>
+                            <div class="analytics-card">
+                                <h4>Average Class Accuracy</h4>
+                                <div class="analytics-value" id="classAccuracy">0%</div>
+                            </div>
+                            <div class="analytics-card">
+                                <h4>Total Sessions</h4>
+                                <div class="analytics-value" id="totalClassSessions">0</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="classPerformanceChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="card">
+                        <h2><i class="fas fa-cog"></i> Teacher Settings</h2>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <label for="teacherApiKey">Your Qwen-Plus API Key:</label>
+                                <input type="password" id="teacherApiKey" placeholder="Enter your API key for all students">
+                                <small>This API key will be used for all student sessions</small>
+                            </div>
+                            <div class="setting-item">
+                                <label for="newTeacherPassword">Change Teacher Password:</label>
+                                <input type="password" id="newTeacherPassword" placeholder="Enter new password">
+                                <button class="btn btn-secondary" id="changePasswordBtn">
+                                    <i class="fas fa-key"></i> Update Password
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logout -->
+                    <div class="teacher-actions">
+                        <button class="btn btn-secondary" id="teacherLogoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Loading Overlay -->
@@ -337,6 +518,9 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/assignmentHandler.js"></script>
+    <script src="js/studentAuthService.js"></script>
+    <script src="js/teacherDashboardService.js"></script>
     <script src="js/googleAuthService.js"></script>
     <script src="js/dataManager.js"></script>
     <script src="js/aiService.js"></script>
