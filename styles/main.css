@@ -855,6 +855,16 @@ body {
     font-size: 0.9rem;
 }
 
+/* Teacher Access */
+.teacher-access {
+    margin-top: 15px;
+}
+
+.teacher-access p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
 /* Teacher Panel Styles */
 .teacher-container {
     max-width: 1200px;

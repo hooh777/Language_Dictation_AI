@@ -127,15 +127,47 @@ class StudentAuthService {
         const studentInfo = document.getElementById('studentInfo');
         const loggedInStudentName = document.getElementById('loggedInStudentName');
         const loggedInClassCode = document.getElementById('loggedInClassCode');
+        const mainNavigation = document.getElementById('mainNavigation');
+        const setupTab = document.getElementById('setup');
 
         if (this.isLoggedIn && this.currentStudent) {
+            // Hide login, show student info and main app
             studentLogin.style.display = 'none';
             studentInfo.style.display = 'block';
+            mainNavigation.style.display = 'flex';
+            setupTab.style.display = 'block';
+            
+            // Update student info
             loggedInStudentName.textContent = this.currentStudent.name;
             loggedInClassCode.textContent = this.currentStudent.classCode;
+            
+            // Make setup tab active
+            setupTab.classList.add('active');
+            
+            // Update tab button
+            const setupTabBtn = document.querySelector('[data-tab="setup"]');
+            if (setupTabBtn) {
+                setupTabBtn.classList.add('active');
+            }
         } else {
+            // Show login, hide main app
             studentLogin.style.display = 'block';
             studentInfo.style.display = 'none';
+            mainNavigation.style.display = 'none';
+            setupTab.style.display = 'none';
+            
+            // Hide all other tabs
+            const allTabs = document.querySelectorAll('.tab-content');
+            allTabs.forEach(tab => {
+                if (tab.id !== 'setup') {
+                    tab.style.display = 'none';
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Reset tab buttons
+            const allTabBtns = document.querySelectorAll('.tab-btn');
+            allTabBtns.forEach(btn => btn.classList.remove('active'));
         }
     }
 
@@ -156,6 +188,13 @@ class StudentAuthService {
         // Clear form
         document.getElementById('studentName').value = '';
         document.getElementById('classCode').value = '';
+        
+        // Hide all tabs and show login
+        const allTabs = document.querySelectorAll('.tab-content');
+        allTabs.forEach(tab => {
+            tab.style.display = 'none';
+            tab.classList.remove('active');
+        });
         
         this.updateUI();
         this.showSuccessMessage('Logged out successfully');

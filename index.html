@@ -50,10 +50,19 @@
                     </button>
                 </div>
             </div>
+            
+            <!-- Teacher Access Link (always visible) -->
+            <div class="teacher-access" id="teacherAccess">
+                <p style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-secondary btn-sm" id="teacherAccessBtn">
+                        <i class="fas fa-chalkboard-teacher"></i> Teacher Login
+                    </button>
+                </p>
+            </div>
         </header>
 
-        <!-- Navigation Tabs -->
-        <nav class="nav-tabs">
+        <!-- Navigation Tabs (hidden until login) -->
+        <nav class="nav-tabs" id="mainNavigation" style="display: none;">
             <button class="tab-btn active" data-tab="setup">Setup</button>
             <button class="tab-btn" data-tab="practice">Practice</button>
             <button class="tab-btn" data-tab="progress">Progress</button>
@@ -62,8 +71,8 @@
             </button>
         </nav>
 
-        <!-- Setup Tab -->
-        <div class="tab-content active" id="setup">
+        <!-- Setup Tab (hidden until login) -->
+        <div class="tab-content" id="setup" style="display: none;">
             <div class="card">
                 <h2><i class="fas fa-upload"></i> Import Vocabulary</h2>
                 <div class="import-section">

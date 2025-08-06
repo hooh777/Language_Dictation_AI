@@ -11,6 +11,12 @@ class TeacherDashboardService {
     }
 
     setupEventListeners() {
+        // Teacher access button (always visible)
+        const teacherAccessBtn = document.getElementById('teacherAccessBtn');
+        if (teacherAccessBtn) {
+            teacherAccessBtn.addEventListener('click', () => this.showTeacherAccess());
+        }
+        
         // Teacher login
         const teacherLoginBtn = document.getElementById('teacherLoginBtn');
         if (teacherLoginBtn) {
@@ -56,6 +62,31 @@ class TeacherDashboardService {
         }
     }
 
+    showTeacherAccess() {
+        // Hide student login and show teacher interface
+        document.getElementById('studentLogin').style.display = 'none';
+        document.getElementById('studentInfo').style.display = 'none';
+        document.getElementById('teacherAccess').style.display = 'none';
+        document.getElementById('mainNavigation').style.display = 'flex';
+        document.getElementById('teacher').style.display = 'block';
+        document.getElementById('teacherTab').style.display = 'block';
+        
+        // Hide other tabs
+        const otherTabs = ['setup', 'practice', 'progress'];
+        otherTabs.forEach(tabId => {
+            document.getElementById(tabId).style.display = 'none';
+            document.getElementById(tabId).classList.remove('active');
+        });
+        
+        // Activate teacher tab
+        document.getElementById('teacher').classList.add('active');
+        document.getElementById('teacherTab').classList.add('active');
+        
+        // Reset other tab buttons
+        const otherTabBtns = document.querySelectorAll('.tab-btn:not(#teacherTab)');
+        otherTabBtns.forEach(btn => btn.classList.remove('active'));
+    }
+
     handleTeacherLogin() {
         const enteredPassword = document.getElementById('teacherPassword').value;
         
@@ -85,8 +116,24 @@ class TeacherDashboardService {
         localStorage.removeItem('teacherLoggedIn');
         document.getElementById('teacherLogin').style.display = 'block';
         document.getElementById('teacherDashboard').style.display = 'none';
-        document.getElementById('teacherTab').style.display = 'none';
         document.getElementById('teacherPassword').value = '';
+        
+        // Return to student login view
+        document.getElementById('studentLogin').style.display = 'block';
+        document.getElementById('teacherAccess').style.display = 'block';
+        document.getElementById('mainNavigation').style.display = 'none';
+        document.getElementById('teacher').style.display = 'none';
+        document.getElementById('teacherTab').style.display = 'none';
+        
+        // Reset all tabs
+        const allTabs = document.querySelectorAll('.tab-content');
+        allTabs.forEach(tab => {
+            tab.style.display = 'none';
+            tab.classList.remove('active');
+        });
+        
+        const allTabBtns = document.querySelectorAll('.tab-btn');
+        allTabBtns.forEach(btn => btn.classList.remove('active'));
     }
 
     createAssignment() {
