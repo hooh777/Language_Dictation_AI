@@ -7,9 +7,9 @@ A web-based dictation application that helps users learn vocabulary through AI-g
 ## 🚀 Features
 
 ### Core Functionality
-- **Vocabulary Import**: Import words from Excel/CSV files with format: Word | POS | Meaning | Sentence Example
-- **AI Sentence Generation**: Uses Grok-1.5 Vision API to create contextual sentences based on difficulty levels (Beginner, Intermediate, Advanced)
-- **Text-to-Speech**: Browser-based speech synthesis with adjustable speed
+- **Vocabulary Import**: Import words from Excel/CSV files or private Google Sheets with OAuth authentication
+- **AI Sentence Generation**: Uses Qwen-Plus API to create contextual sentences based on difficulty levels (Beginner, Intermediate, Advanced)
+- **Advanced Text-to-Speech**: Three-tier system: Browser TTS (free), ElevenLabs (premium), and CSM (ultra-premium with conversation context)
 - **Multiple Input Methods**: Type answers or upload handwritten responses (OCR support)
 - **Progress Tracking**: Comprehensive analytics including accuracy metrics, study streaks, and achievements
 
@@ -22,8 +22,9 @@ A web-based dictation application that helps users learn vocabulary through AI-g
 ## 🛠️ Technology Stack
 
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+)
-- **AI Integration**: Grok-1.5 Vision API (x.ai) for sentence generation
-- **Text-to-Speech**: Web Speech API
+- **AI Integration**: Qwen-Plus API (Alibaba Cloud) for sentence generation
+- **Text-to-Speech**: Three-tier system: Web Speech API, ElevenLabs premium voices, and CSM conversational AI
+- **Authentication**: Google OAuth for private sheets access
 - **OCR**: Tesseract.js for handwriting recognition
 - **File Processing**: XLSX.js for Excel file parsing
 - **Charts**: Chart.js for progress visualization
@@ -37,13 +38,14 @@ Language_Dictation_AI/
 ├── styles/
 │   └── main.css            # Complete styling with responsive design
 ├── js/
-│   ├── app.js              # Main application logic
-│   ├── dataManager.js      # Vocabulary import and session management
-│   ├── aiService.js        # Grok3 API integration
-│   ├── speechService.js    # Text-to-speech functionality
-│   ├── ocrService.js       # OCR for handwritten text
-│   ├── progressTracker.js  # Progress tracking and analytics
-│   └── utils.js            # Utility functions
+│   ├── app.js                  # Main application logic
+│   ├── dataManager.js          # Vocabulary import and session management
+│   ├── aiService.js            # Qwen-Plus API integration
+│   ├── speechService.js        # Text-to-speech functionality
+│   ├── googleAuthService.js    # Google OAuth authentication
+│   ├── ocrService.js           # OCR for handwritten text
+│   ├── progressTracker.js      # Progress tracking and analytics
+│   └── utils.js                # Utility functions
 └── README.md
 ```
 
@@ -51,14 +53,17 @@ Language_Dictation_AI/
 
 ### Prerequisites
 - Modern web browser with JavaScript enabled
-- Grok-1.5 Vision API key from x.ai (for AI sentence generation)
-- Vocabulary data in Excel/CSV format
+- Qwen-Plus API key from Alibaba Cloud (for AI sentence generation)
+- Optional: ElevenLabs API key (for premium human-like voices)
+- Optional: Google OAuth Client ID (for private Google Sheets access)
+- Optional: CUDA-compatible GPU (for CSM conversational speech)
+- Vocabulary data in Excel/CSV format or Google Sheets
 
 ### Installation
 
 1. **Clone or download** this repository to your local machine
 2. **Open** `index.html` in your web browser
-3. **Configure** your Grok3 API key in the Setup tab
+3. **Configure** your Qwen-Plus API key in the Setup tab
 4. **Import** your vocabulary data or use the sample data to get started
 
 ### Vocabulary File Format
@@ -73,8 +78,9 @@ Sidewalk      | n.   | 人行道            | Please walk on the sidewalk for yo
 ## 📖 How to Use
 
 ### 1. Setup Phase
-- **Import Vocabulary**: Upload your Excel/CSV file or load sample data
-- **Configure API**: Enter your Grok-1.5 Vision API key (stored locally, never shared)
+- **Import Vocabulary**: Upload your Excel/CSV file, connect to Google Sheets, or load sample data
+- **Configure API**: Enter your Qwen-Plus API key (stored locally, never shared)
+- **Choose Voice**: Select between browser TTS or premium ElevenLabs voices
 - **Set Preferences**: Choose difficulty level, session size, and speech speed
 
 ### 2. Practice Phase
@@ -92,13 +98,15 @@ Sidewalk      | n.   | 人行道            | Please walk on the sidewalk for yo
 ## 🔧 Configuration
 
 ### API Setup
-1. Get your Grok-1.5 Vision API key from [x.ai](https://x.ai)
+1. Get your Qwen-Plus API key from [Alibaba Cloud Model Studio](https://www.aliyun.com/product/bailian)
 2. Enter the key in the Setup tab
 3. The key is stored locally and never transmitted to third parties
 
 ### Speech Settings
+- **Provider**: Choose between Browser TTS (free) or ElevenLabs (premium)
 - **Speed**: Adjust speech rate (Slow/Normal/Fast)
-- **Voice**: Automatic selection of best available English voice
+- **Voice**: Select from multiple realistic voice options
+- **Quality**: ElevenLabs provides ultra-realistic human voices
 - **Replay**: Listen to sentences multiple times
 
 ### Session Options

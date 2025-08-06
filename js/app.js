@@ -46,6 +46,22 @@ class DictationApp {
             document.getElementById('googleClientId').value = savedClientId;
             window.googleAuthService.setClientId(savedClientId);
         }
+
+        // Load saved TTS settings
+        const savedProvider = loadFromStorage('ttsProvider', 'browser');
+        document.getElementById('ttsProvider').value = savedProvider;
+        this.toggleTTSSettings(savedProvider);
+
+        const savedElevenLabsKey = loadFromStorage('elevenLabsApiKey', '');
+        if (savedElevenLabsKey) {
+            document.getElementById('elevenLabsApiKey').value = savedElevenLabsKey;
+        }
+
+        const savedVoiceId = loadFromStorage('elevenLabsVoiceId', 'EXAVITQu4vr4xnSDxMaL');
+        document.getElementById('elevenLabsVoiceSelect').value = savedVoiceId;
+
+        const savedCSMSpeaker = loadFromStorage('csmSpeaker', 0);
+        document.getElementById('csmSpeaker').value = savedCSMSpeaker;
         
         console.log(`App initialized on ${this.platform} platform`);
     }
@@ -230,6 +246,47 @@ class DictationApp {
         document.getElementById('qwenSetupGuide').addEventListener('click', (e) => {
             e.preventDefault();
             this.showQwenSetupGuide();
+        });
+
+        // TTS Provider selection
+        document.getElementById('ttsProvider').addEventListener('change', (e) => {
+            const provider = e.target.value;
+            speechService.setProvider(provider);
+            this.toggleTTSSettings(provider);
+        });
+
+        // ElevenLabs API Key
+        document.getElementById('elevenLabsApiKey').addEventListener('input', (e) => {
+            const apiKey = e.target.value.trim();
+            speechService.saveElevenLabsApiKey(apiKey);
+        });
+
+        // ElevenLabs Voice selection
+        document.getElementById('elevenLabsVoiceSelect').addEventListener('change', (e) => {
+            const voiceId = e.target.value;
+            speechService.setElevenLabsVoice(voiceId);
+        });
+
+        // CSM Speaker selection
+        document.getElementById('csmSpeaker').addEventListener('change', (e) => {
+            const speakerId = parseInt(e.target.value);
+            speechService.setCSMSpeaker(speakerId);
+        });
+
+        // CSM Setup button
+        document.getElementById('setupCSMBtn').addEventListener('click', () => {
+            speechService.setupCSM();
+        });
+
+        // Clear Context button
+        document.getElementById('clearContextBtn').addEventListener('click', () => {
+            speechService.clearConversationContext();
+        });
+
+        // Speech speed
+        document.getElementById('speechSpeed').addEventListener('change', (e) => {
+            const speed = parseFloat(e.target.value);
+            speechService.setRate(speed);
         });
 
         // Session settings
@@ -1003,6 +1060,50 @@ class DictationApp {
         `;
         
         showMessage(guideContent, 'info', 12000);
+    }
+
+    // Toggle TTS provider settings visibility
+    toggleTTSSettings(provider) {
+        const elevenLabsSettings = document.getElementById('elevenLabsSettings');
+        const elevenLabsVoices = document.getElementById('elevenLabsVoices');
+        const csmSettings = document.getElementById('csmSettings');
+        const csmControls = document.getElementById('csmControls');
+        
+        // Hide all provider-specific settings first
+        elevenLabsSettings.style.display = 'none';
+        elevenLabsVoices.style.display = 'none';
+        csmSettings.style.display = 'none';
+        csmControls.style.display = 'none';
+        
+        // Show relevant settings based on provider
+        if (provider === 'elevenlabs') {
+            elevenLabsSettings.style.display = 'block';
+            elevenLabsVoices.style.display = 'block';
+        } else if (provider === 'csm') {
+            csmSettings.style.display = 'block';
+            csmControls.style.display = 'block';
+            this.updateCSMStatus();
+        }
+    }
+
+    // Update CSM status display
+    updateCSMStatus() {
+        const statusElement = document.getElementById('csmStatus');
+        if (speechService.csmAvailable) {
+            statusElement.textContent = 'Ready';
+            statusElement.style.color = '#28a745';
+        } else if (speechService.csmLoading) {
+            statusElement.textContent = 'Loading...';
+            statusElement.style.color = '#007bff';
+        } else {
+            statusElement.textContent = 'Not setup';
+            statusElement.style.color = '#6c757d';
+        }
+    }
+
+    // Toggle ElevenLabs settings visibility (kept for compatibility)
+    toggleElevenLabsSettings(show) {
+        this.toggleTTSSettings(show ? 'elevenlabs' : 'browser');
     }
 }
 

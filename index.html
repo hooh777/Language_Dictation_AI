@@ -118,6 +118,66 @@
                     </div>
                 </div>
                 
+                <div class="speech-settings">
+                    <h3><i class="fas fa-volume-up"></i> Speech Configuration</h3>
+                    <div class="setting-item">
+                        <label for="ttsProvider">Voice Provider:</label>
+                        <select id="ttsProvider">
+                            <option value="browser">Browser TTS (Free)</option>
+                            <option value="elevenlabs">ElevenLabs (Premium)</option>
+                            <option value="csm">CSM (Ultra-Premium)</option>
+                        </select>
+                        <small>CSM provides conversational AI with context memory</small>
+                    </div>
+                    <div class="setting-item" id="elevenLabsSettings" style="display: none;">
+                        <label for="elevenLabsApiKey">ElevenLabs API Key:</label>
+                        <input type="password" id="elevenLabsApiKey" placeholder="Enter your ElevenLabs API key">
+                        <small>Get your API key from <a href="https://elevenlabs.io" target="_blank">elevenlabs.io</a></small>
+                    </div>
+                    <div class="setting-item" id="elevenLabsVoices" style="display: none;">
+                        <label for="elevenLabsVoiceSelect">Voice:</label>
+                        <select id="elevenLabsVoiceSelect">
+                            <option value="EXAVITQu4vr4xnSDxMaL">Bella (Female, American)</option>
+                            <option value="ErXwobaYiN019PkySvjV">Antoni (Male, American)</option>
+                            <option value="VR6AewLTigWG4xSOukaG">Arnold (Male, American)</option>
+                            <option value="pNInz6obpgDQGcFmaJgB">Adam (Male, American)</option>
+                            <option value="AZnzlk1XvdvUeBnXmlld">Domi (Female, American)</option>
+                            <option value="CYw3kZ02Hs0563khs1Fj">Dave (Male, British-Essex)</option>
+                            <option value="JBFqnCBsd6RMkjVDRZzb">George (Male, British)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item" id="csmSettings" style="display: none;">
+                        <label for="csmSpeaker">CSM Speaker:</label>
+                        <select id="csmSpeaker">
+                            <option value="0">Speaker 1 (Clear & Articulate)</option>
+                            <option value="1">Speaker 2 (Warm & Friendly)</option>
+                            <option value="2">Speaker 3 (Professional)</option>
+                            <option value="3">Speaker 4 (Energetic)</option>
+                        </select>
+                        <small>Each speaker has a unique personality and voice characteristics</small>
+                    </div>
+                    <div class="setting-item" id="csmControls" style="display: none;">
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button class="btn btn-secondary btn-sm" id="setupCSMBtn">
+                                <i class="fas fa-cog"></i> Setup CSM
+                            </button>
+                            <button class="btn btn-secondary btn-sm" id="clearContextBtn">
+                                <i class="fas fa-trash"></i> Clear Context
+                            </button>
+                            <span id="csmStatus" style="font-size: 0.9rem; color: #6c757d;">Not setup</span>
+                        </div>
+                        <small>CSM remembers conversation context for natural speech flow</small>
+                    </div>
+                    <div class="setting-item">
+                        <label for="speechSpeed">Speech Speed:</label>
+                        <select id="speechSpeed">
+                            <option value="0.8">Slow</option>
+                            <option value="1.0" selected>Normal</option>
+                            <option value="1.2">Fast</option>
+                        </select>
+                    </div>
+                </div>
+                
                 <div class="api-settings">
                     <h3><i class="fas fa-key"></i> API Configuration</h3>
                     <div class="setting-item">
